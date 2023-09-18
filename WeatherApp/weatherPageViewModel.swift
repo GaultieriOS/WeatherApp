@@ -52,7 +52,7 @@ class WeatherPageViewModel : ObservableObject {
         "Snow": "cloud.snow"
     ]
     
-    
+    //Prepare to get all the data
     func fetchAllData() {
         startLoading()
         startLoop()
@@ -80,6 +80,7 @@ class WeatherPageViewModel : ObservableObject {
         }
     }
     
+    //Get the data, decode the JSON and fill the cityWeather Struct
     func fetchData(from urlStr: String) {
         if let url = URL(string: urlStr) {
             URLSession.shared.dataTask(with: url) { (data, _, error) in
@@ -118,6 +119,8 @@ class WeatherPageViewModel : ObservableObject {
             }.resume()
         }
     }
+    
+    //Start the progress bar
     func startLoading() {
         progressValue = 0.0 // Reset the progress
         timer?.invalidate() // Stop any existing timer
@@ -125,7 +128,6 @@ class WeatherPageViewModel : ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true) { _ in
             if self.progressValue < 1.0 {
                 self.progressValue += self.timerInterval / self.totalTime
-//                print(self.progressValue)
                 let number = ((self.progressValue * 100).rounded() / 100)*100
                 self.progress = Int(number.rounded())
                 print(self.progress)
@@ -135,6 +137,7 @@ class WeatherPageViewModel : ObservableObject {
         }
     }
     
+    //Start the loop for the text
     func startLoop() {
         timerText?.invalidate()
         counter = 0
