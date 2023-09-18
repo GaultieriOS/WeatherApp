@@ -41,6 +41,8 @@ class WeatherPageViewModel : ObservableObject {
     var isLoading = false
     var isError = false
     
+    var progress = 0
+    
     let weatherPictoMap: [String: String] = [
         "Rain": "cloud.rain",
         "Thunderstorm": "cloud.bolt",
@@ -123,7 +125,10 @@ class WeatherPageViewModel : ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: timerInterval, repeats: true) { _ in
             if self.progressValue < 1.0 {
                 self.progressValue += self.timerInterval / self.totalTime
-                print(self.progressValue)
+//                print(self.progressValue)
+                let number = ((self.progressValue * 100).rounded() / 100)*100
+                self.progress = Int(number.rounded())
+                print(self.progress)
             } else {
                 self.timer?.invalidate()
             }

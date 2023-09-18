@@ -38,9 +38,13 @@ struct WeatherPage: View {
             
             HStack(alignment: .bottom){
                 if viewModel.isLoading == true && viewModel.isError == false{
-                    ProgressView(viewModel.labelText, value: viewModel.progressValue, total: 1.0)
-                        .padding([.leading, .bottom, .trailing], 30.0)
-                        .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                    VStack{
+                        ProgressView(viewModel.labelText, value: viewModel.progressValue, total: 1.0)
+                            .padding([.leading, .bottom, .trailing], 30.0)
+                            .progressViewStyle(LinearProgressViewStyle(tint: .blue))
+                        Text("\(viewModel.progress) %")
+                    }
+                        .padding(.top, -40.0)
                 }else if viewModel.isLoading == false && viewModel.isError == false{
                     Button("Recommencer") {
                         viewModel.fetchAllData()
