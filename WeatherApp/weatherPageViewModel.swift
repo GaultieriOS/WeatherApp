@@ -23,6 +23,8 @@ class WeatherPageViewModel : ObservableObject {
     @Published var weather: [cityWeather] = []
     private var currentIndex = 0
     
+    private let token = "82125178fcc05780625e4459f6097e2f"
+    
     @Published var progressValue: Double = 0.0
     let totalTime: Double = 60.0 // One minute in seconds
     let timerInterval: Double = 1.0 // Update the progress every 1 second
@@ -52,30 +54,28 @@ class WeatherPageViewModel : ObservableObject {
         "Snow": "cloud.snow"
     ]
     
+    private let cityArray:[String] = ["Rennes","Paris","Nantes","Bordeaux","Lyon"]
+    
     //Prepare to get all the data
     func fetchAllData() {
         startLoading()
         startLoop()
         isLoading = true
         isError = false
-        
-        let urls = [
-            "https://api.openweathermap.org/data/2.5/weather?q=Rennes&appid=82125178fcc05780625e4459f6097e2f&units=metric&lang=fr",
-            "https://api.openweathermap.org/data/2.5/weather?q=Paris&appid=82125178fcc05780625e4459f6097e2f&units=metric&lang=fr",
-            "https://api.openweathermap.org/data/2.5/weather?q=Nantes&appid=82125178fcc05780625e4459f6097e2f&units=metric&lang=fr",
-            "https://api.openweathermap.org/data/2.5/weather?q=Bordeaux&appid=82125178fcc05780625e4459f6097e2f&units=metric&lang=fr",
-            "https://api.openweathermap.org/data/2.5/weather?q=Lyon&appid=82125178fcc05780625e4459f6097e2f&units=metric&lang=fr"
-        ]
+        self.progress = 0
+        self.weather = []
+
         
         // Start a timer with a 10-second interval between API calls
         timerRequest = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: true) { _ in
-            if self.currentIndex < urls.count {
-                self.fetchData(from: urls[self.currentIndex])
+            if self.currentIndex < self.cityArray.count {
+                self.fetchData(from: "https://api.openweathermap.org/data/2.5/weather?q=\(self.cityArray[self.currentIndex])&appid=\(self.token)&units=metric&lang=fr")
                 self.currentIndex += 1
             } else {
                 self.timerRequest?.invalidate()
                 print("All API calls completed.")
                 self.isLoading = false
+                self.currentIndex = 0
             }
         }
     }
